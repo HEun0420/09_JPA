@@ -1,4 +1,4 @@
-package com.ohgiraffers.section02.column;
+package com.ohgiraffers.section04.enumtype;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -10,8 +10,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ColumnMappingTests {
-
+public class EnumTypeMappingTests {
     private static EntityManagerFactory entityManagerFactory;
     private static EntityManager entityManager;
 
@@ -35,40 +34,37 @@ public class ColumnMappingTests {
         entityManager.close();
     }
 
-    @DisplayName("컬럼에서 사용하는 속성 테스트")
+    @DisplayName("enum타입 매핑 테스트")
     @Test
-    public void testColumnMapping() {
+    public void enumTypeMappingTests(){
 
-        // given
-        Member member = new Member();
-        member.setMemberNo(1);
+        //given
+        Member member =new Member();
         member.setMemberId("user01");
         member.setMemberPwd("pass01");
         member.setNickname("홍길동");
-//        member.setPhone("010-1234-5678");
+        member.setPhone("010-1234-5678");
         member.setAddress("서울시 종로구");
         member.setEnrollDate(LocalDate.now());
-        member.setMemberRole("ROLE_MEMBER");
+        member.setMemberRole(RoleType.Member);
         member.setStatus("Y");
 
         // when
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        entityTransaction.begin();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
-        try {
+        try{
             entityManager.persist(member);
-            entityTransaction.commit();
-        } catch (Exception e) {
-            entityTransaction.rollback();
+            transaction.commit();
+        }catch (Exception e){
+            transaction.rollback();
             throw new RuntimeException(e);
         }
 
         // then
         Member foundMember = entityManager.find(Member.class, member.getMemberNo());
-        assertEquals(member.getMemberNo(),foundMember.getMemberNo());
-
-
-
+        System.out.println("foundMember = " + foundMember);
+        assertEquals(member.getMemberNo(), foundMember.getMemberNo());
 
     }
 }

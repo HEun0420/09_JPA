@@ -1,4 +1,4 @@
-package com.ohgiraffers.section02.column;
+package com.ohgiraffers.section05.access.subsection02.property;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -6,12 +6,9 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
-import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ColumnMappingTests {
-
+public class accessPropertyTests {
     private static EntityManagerFactory entityManagerFactory;
     private static EntityManager entityManager;
 
@@ -35,39 +32,32 @@ public class ColumnMappingTests {
         entityManager.close();
     }
 
-    @DisplayName("컬럼에서 사용하는 속성 테스트")
+    @DisplayName("프로퍼티 접근 테스트")
     @Test
-    public void testColumnMapping() {
+    public void accessPropertyTest(){
 
-        // given
+        //given
         Member member = new Member();
         member.setMemberNo(1);
-        member.setMemberId("user01");
+        member.setMemberID("user01");
         member.setMemberPwd("pass01");
         member.setNickname("홍길동");
-//        member.setPhone("010-1234-5678");
-        member.setAddress("서울시 종로구");
-        member.setEnrollDate(LocalDate.now());
-        member.setMemberRole("ROLE_MEMBER");
-        member.setStatus("Y");
 
-        // when
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        entityTransaction.begin();
-
-        try {
+        //when
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        try{
             entityManager.persist(member);
-            entityTransaction.commit();
-        } catch (Exception e) {
-            entityTransaction.rollback();
-            throw new RuntimeException(e);
+            transaction.commit();
+        } catch (Exception e){
+            transaction.rollback();
+            throw new RuntimeException();
         }
 
-        // then
-        Member foundMember = entityManager.find(Member.class, member.getMemberNo());
-        assertEquals(member.getMemberNo(),foundMember.getMemberNo());
-
-
+        //then
+        String jpql = "select a.nickname from member_section05_sub02 a where a.memberNo = 1";
+        String registNickName = entityManager.createQuery(jpql, String.class).getSingleResult();
+        assertEquals("홍길동님", registNickName);
 
 
     }

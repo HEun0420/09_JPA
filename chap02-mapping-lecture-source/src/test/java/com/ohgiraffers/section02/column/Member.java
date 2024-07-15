@@ -1,10 +1,7 @@
 package com.ohgiraffers.section02.column;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -22,7 +19,7 @@ import java.time.LocalDate;
  * 8. length : 문자열 길이. String 타입에서만 사용. (default : 255)
  * */
 
-@Entity(name="member_section02")
+//@Entity(name="member_section02")
 @Table(name="tbl_member_section02")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,19 +46,20 @@ public class Member {
     @Column(name = "member_id")
     private String memberId;
 
-    @Column(name = "member_pwd")
+    @Column(name = "member_pwd", length = 100)
     private String memberPwd;
 
     @Column(name = "nickname")
+    @Transient // 테이블 생성시 무시
     private String nickname;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "phone", columnDefinition = "varchar(200) default '010-0000-0000'")
+    private String phone="010-0000-0000";
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
 
     @Column(name = "enroll_date")
