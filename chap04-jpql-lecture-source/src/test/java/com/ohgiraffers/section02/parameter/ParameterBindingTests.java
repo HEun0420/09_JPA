@@ -50,7 +50,7 @@ public class ParameterBindingTests {
       String menuNameParameter = "홍어마카롱";
 
         //when
-       String jpql = "select m from menu_section02 m where m.menuName = menuName";
+       String jpql = "select m from menu_section02 m where m.menuName = :menuName";
        List<Menu> menuList = entityManager.createQuery(jpql, Menu.class)
                .setParameter("menuName", menuNameParameter).getResultList();
 
