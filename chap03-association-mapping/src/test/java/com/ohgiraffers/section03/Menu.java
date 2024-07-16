@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "category") // 순환참조(StackOverflowError) 방지
 public class Menu {
 
     @Id
@@ -23,7 +23,8 @@ public class Menu {
     private int menuPrice;
 
     @JoinColumn(name = "category_code")
-    private int categoryCode;
+    @ManyToOne
+    private Category category;
 
     @Column(name = "orderable_status")
     private String orderableStatus;

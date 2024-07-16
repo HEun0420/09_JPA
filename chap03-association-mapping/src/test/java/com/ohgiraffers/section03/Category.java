@@ -29,7 +29,7 @@ public class Category {
     private String categoryName;
 
     @Column (name = "ref_category_code")
-    private int reCategoryCode;
+    private Integer reCategoryCode;
 
     @OneToMany(mappedBy = "category")
     private List<Menu> menuList;
