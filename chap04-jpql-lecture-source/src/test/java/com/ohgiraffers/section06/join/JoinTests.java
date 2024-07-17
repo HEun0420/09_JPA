@@ -1,0 +1,64 @@
+package com.ohgiraffers.section06.join;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import org.junit.jupiter.api.*;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+public class JoinTests {
+    private static EntityManagerFactory entityManagerFactory;
+    private static EntityManager entityManager;
+
+    @BeforeAll
+    public static void initFactory() {
+        entityManagerFactory = Persistence.createEntityManagerFactory("jpatest");
+    }
+
+    @BeforeEach
+    public void initManager() {
+        entityManager = entityManagerFactory.createEntityManager();
+    }
+
+    @AfterAll
+    public static void closeFactory() {
+        entityManagerFactory.close();
+    }
+
+    @AfterEach
+    public void closeManager() {
+        entityManager.close();
+    }
+
+
+    /*
+    * 조인의 종류
+    *
+    * 1. 일반 조인: SQL 조인들을 의미
+    * 2. 패치 조인: JPQL에서 성능 최적화를 위해서 제공하는 기능
+    *              연관된 엔티티나 컬렉션을 한번에 조회 가능하다.
+    *              지연 로딩이 아닌 즉시로딩을 수행하고, (join fetch)
+     */
+
+    @Test
+    @DisplayName("내부 조인을 이용한 조회 테스트")
+    void test1 () {
+
+        //given
+        //when
+        // N+1 문제
+//        String jpql = "select m from menu_section06 m join m.category c";
+        String jpql = "select m from menu_section06 m join fetch m.category c";
+        // 하이버네이트가 쿼리를 9번 작성함(8+1), 카테고리가 많을 수록 더 많은 쿼리를 작성하기 때문에 느려짐
+        List<Menu> menuList =
+                entityManager.createQuery(jpql, Menu.class).getResultList();
+
+        //then
+        assertNotNull(menuList);
+        menuList.forEach(System.out::println);
+
+    }
+}

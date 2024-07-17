@@ -5,6 +5,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GroupFunctionTests {
@@ -92,17 +95,48 @@ public class GroupFunctionTests {
 //        });
 
         assertDoesNotThrow(() -> {
-            long countOfMenu = entityManager.createQuery(jpql, Long.class)
+            Long countOfMenu = entityManager.createQuery(jpql, Long.class)
                     .setParameter("categoryCode", categoryCodeParameter)
                     .getSingleResult();
         });
 
-        Long countOfMenu = entityManager.createQuery(jpql, Long.class)
-                .setParameter("categoryCode", categoryCodeParameter)
-                .getSingleResult();
+//        Long countOfMenu = entityManager.createQuery(jpql, Long.class)
+//                .setParameter("categoryCode", categoryCodeParameter)
+//                .getSingleResult();
+//        //then
+//        assertTrue(countOfMenu>= 0);
+//        System.out.println("countOfMenu" + countOfMenu);
+
+    }
+
+    @Test
+    @DisplayName("groupby절과 having절을 사용한 조회 테스트")
+    public void test3 () {
+
+        //given
+        long minPrice = 50000L; // long 타입 표시
+        // 그룹함수의 반환 타입은 long 이므로 비교를 위한 파라미터도 long타입을 사용해야한다.
+
+        //when
+      String jpql = """
+              select m.categoryCode, sum(m.menuPrice)
+              from menu_section05 m
+              group by m.categoryCode
+              having sum(m.menuPrice) >= :minPrice
+              """;
+
+        List<Object[]> sumPriceOfCategoryList =
+                entityManager.createQuery(jpql,Object[].class)
+                        .setParameter("minPrice", minPrice)
+                        .getResultList();
+
         //then
-        assertTrue(countOfMenu>= 0);
-        System.out.println("countOfMenu" + countOfMenu);
+        assertNotNull(sumPriceOfCategoryList);
+
+        sumPriceOfCategoryList.forEach(row -> {
+            Arrays.stream(row).forEach(System.out::println);
+        });
+
 
     }
 }
