@@ -3,7 +3,10 @@ package com.ohgiraffers.section09.nativequery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class JpqlNativeQueryTests {
     private static EntityManagerFactory entityManagerFactory;
@@ -56,11 +59,15 @@ public class JpqlNativeQueryTests {
                 from
                 tbl_menu
                 where
-                menu_name=?
+                menu_code = ?
                 """;
-        
+        Query query =entityManager.createNativeQuery(jpql, Menu.class)
+                .setParameter(1,menuCode);
 
+        Menu menu = (Menu) query.getSingleResult();
+        System.out.println("menu = " + menu);
         //then
+        assertNotNull(menu);
     }
 
 }
