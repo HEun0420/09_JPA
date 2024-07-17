@@ -6,6 +6,8 @@ import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -60,5 +62,57 @@ public class JoinTests {
         assertNotNull(menuList);
         menuList.forEach(System.out::println);
 
+    }
+
+    @Test
+    @DisplayName("외부조인을 위한 조회 테스트")
+    public void test2 () {
+
+        //given
+        //when
+      String jpql = """
+              select m.menuName, c.categoryName
+              from menu_section06 m
+              right join m.category c
+              order by m.category.categoryCode
+              """;
+      List<Object[]> menuList =
+              entityManager.createQuery(jpql, Object[].class).getResultList();
+        //then
+        assertNotNull(menuList);
+//        for(Object[] row : menuList){
+//            for(Object col : row){
+//                System.out.println(col + " ");
+//            }
+//            System.out.println();
+//        }
+
+        menuList.forEach(row -> {
+            Stream.of(row).forEach(col -> System.out.println(col + ""));
+            System.out.println();
+        });
+    }
+    @Test
+    @DisplayName("컬렉션 조인을 이용한 조회 테스트")
+    public void test3 () {
+        // 컬렉션 조회: 컬렉션을 지니고 있는 엔티티를 기준으로 조인하는 것을 의미
+
+        //given
+        //when
+      String jpql = """
+              select c.categoryName, m.menuName
+              from category_section06 c
+              left join c.menuList m
+              """;
+
+      List<Object[]> categoryList =
+              entityManager.createQuery(jpql,Object[].class)
+                      .getResultList();
+        //then
+    assertNotNull(categoryList);
+    categoryList.forEach(row -> {
+        Stream.of(row).forEach(col -> System.out.println("col = " + ""));
+        System.out.println();
+    });
     }
 }

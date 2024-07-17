@@ -1,0 +1,66 @@
+package com.ohgiraffers.section09.nativequery;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import org.junit.jupiter.api.*;
+
+public class JpqlNativeQueryTests {
+    private static EntityManagerFactory entityManagerFactory;
+    private static EntityManager entityManager;
+
+    @BeforeAll
+    public static void initFactory() {
+        entityManagerFactory = Persistence.createEntityManagerFactory("jpatest");
+    }
+
+    @BeforeEach
+    public void initManager() {
+        entityManager = entityManagerFactory.createEntityManager();
+    }
+
+    @AfterAll
+    public static void closeFactory() {
+        entityManagerFactory.close();
+    }
+
+    @AfterEach
+    public void closeManager() {
+        entityManager.close();
+    }
+
+    /*
+    * Native Query
+    * - SQL 쿼리를 그대ㅗㄹ 사용하는 것을 의미한다.
+    * - ORM의 기능을 이용하면서 SQL 쿼리도 활용할 ㅅ 있어서 더욱 강력한 데이터베이스 접근가능
+    * - 복잡한 쿼리, 특정 데이터 베이스에서만 사용가능한 기능을 사용할 때 사용한다.
+    *
+    * 네이티브 쿼리 API 종류 3가지
+    * 1. 결과 타입 정의 (엔티티클래스만 지정 가능
+    *   public Query createNativeQuery(String sqlString, Class resultClass)
+    * 2. 결과 타입을 정리할 수 없을 때
+    *   public Query createNativeQuery(String sqlString)
+    * 3. 결과 매칭
+    *   public Query createNativeQuery(String sqlString, String resultsMapping)
+     */
+
+    @Test
+    @DisplayName("결과타입을 지정해서 Native Query 사용하기")
+    public void test1 () {
+        //given
+        Long menuCode = 15L;
+        //when
+        String jpql = """
+                select
+                *
+                from
+                tbl_menu
+                where
+                menu_name=?
+                """;
+        
+
+        //then
+    }
+
+}
