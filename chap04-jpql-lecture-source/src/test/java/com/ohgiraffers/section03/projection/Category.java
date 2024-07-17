@@ -8,13 +8,13 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Entity(name = "bidrection_category")
+@Entity(name = "category_section03")
 @Table(name = "tbl_category")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class BiDirectionCategory {
+public class Category {
 
     @Id
     @Column(name = "category_code")
@@ -26,16 +26,4 @@ public class BiDirectionCategory {
     @Column(name = "ref_category_code")
     private Integer refCategoryCode;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    private List<BiDirectionMenu> menuList;
-
-    // 순환방지
-    @Override
-    public String toString() {
-        return "BiDirectionCategory{" +
-                "categoryCode=" + categoryCode +
-                ", categoryName='" + categoryName + '\'' +
-                ", refCategoryCode=" + refCategoryCode +
-                '}';
-    }
 }

@@ -4,8 +4,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import org.assertj.core.util.VisibleForTesting;
 import org.junit.jupiter.api.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -113,6 +115,76 @@ public void test2() {
 
     assertNotNull(category.getMenuList());
     category.getMenuList().forEach(System.out::println);
+    }
+
+    @Test
+    @DisplayName("임베디드 타입 프로젝션 테스트")
+    public void test3 () {
+
+        //given
+
+        //when
+        String jpql = "select m.menuInfo from embedded_menu m";
+
+        List<MenuInfo> menuInfoList =
+                entityManager.createQuery(jpql, MenuInfo.class).getResultList();
+        //then
+        assertNotNull(menuInfoList);
+        menuInfoList.forEach(System.out::println);
+
+    }
+
+    @Test
+    @DisplayName("TypedQuery를 이용한 스칼라 타입 프로젝션 테스트 ")
+    public void test4 () {
+
+        //given
+        //when
+      String jpql = "select c.categoryName from category_section03 c";
+        List<String> categoryNameList =
+                entityManager.createQuery(jpql, String.class).getResultList();
+
+        //then
+        assertNotNull(categoryNameList);
+        categoryNameList.forEach(System.out::println);
+
+    }
+    @Test
+    @DisplayName("Query를 이용한 스칼라 타입 프로텍션 테스트")
+    void test5() {
+
+        //given
+        //when
+        String jpql = "select c.categoryName, c.categoryCode from category_section03 c";
+        List<Object[]> categoryList = entityManager.createQuery(jpql).getResultList();
+
+        //then
+        assertNotNull(categoryList);
+        categoryList.forEach(
+                row -> {
+                    Arrays.stream(row).forEach(System.out::println);
+                }
+        );
+    }
+
+    @Test
+    @DisplayName("new 명령어를 활용한 프로젝트 테스트")
+    void test6() {
+
+        //given
+
+        //when
+        String jpql = """
+                select
+                new com.ohgiraffers.section03.projection.CategoryInfo(c.categoryCode, c.categoryName)
+                from
+                category_section03 c
+                """;
+        List<CategoryInfo> categoryInfoList =
+                entityManager.createQuery(jpql, CategoryInfo.class).getResultList();
+        //then
+        assertNotNull(categoryInfoList);
+        categoryInfoList.forEach(System.out::println);
     }
     }
 
