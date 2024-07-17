@@ -1,9 +1,6 @@
 package com.ohgiraffers.section09.nativequery;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name="menu_section09")
@@ -13,6 +10,20 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "section09.Menu.findByMenuCode",
+                query = """
+                        select 
+                        *
+                        from
+                        tbl_menu
+                        where
+                        menu_code = ?
+                        """,
+                resultClass = Menu.class
+        )
+})
 public class Menu {
 
     @Id

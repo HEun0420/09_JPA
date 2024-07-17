@@ -6,6 +6,7 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
 import org.junit.jupiter.api.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class JpqlNativeQueryTests {
@@ -66,6 +67,51 @@ public class JpqlNativeQueryTests {
 
         Menu menu = (Menu) query.getSingleResult();
         System.out.println("menu = " + menu);
+        //then
+        assertNotNull(menu);
+    }
+
+    @Test
+    @DisplayName("결과 타입을 지정하지 않고 Native Query 사용하기")
+    public void test2 (){
+        //given
+      Long menuCode = 15L;
+        //when
+      String sql = """
+              select
+              menu_code,
+              menu_name,
+              (select category_name from tbl_category where category_code = m.category_code)
+              from
+              tbl_menu m
+              where
+              menu_code = ?
+              """;
+       Query query = entityManager.createNativeQuery(sql)
+               .setParameter(1,menuCode);
+
+       Object[] row = (Object[]) query.getSingleResult();
+        for(Object o : row){
+            System.out.println(o);
+        }
+
+        //then
+        // row의 크기가 3이면 pass
+        assertThat(row).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("@NamedNativeQuery 사용하기 - 엔티티")
+    public void test3 () {
+        //given
+        Long menuCode = 15L;
+        //when
+        Query query = entityManager.createNamedQuery("section09.Menu.findByMenuCode", Menu.class)
+                .setParameter(1,menuCode);
+
+        Menu menu = (Menu) query.getSingleResult();
+        System.out.println("menu = " + menu);
+
         //then
         assertNotNull(menu);
     }
