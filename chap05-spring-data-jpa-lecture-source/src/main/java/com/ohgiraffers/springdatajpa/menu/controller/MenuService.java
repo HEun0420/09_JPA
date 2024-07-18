@@ -1,10 +1,15 @@
 package com.ohgiraffers.springdatajpa.menu.controller;
 
+import com.ohgiraffers.springdatajpa.menu.dto.CategoryDto;
 import com.ohgiraffers.springdatajpa.menu.dto.MenuDto;
+import com.ohgiraffers.springdatajpa.menu.model.entity.Category;
 import com.ohgiraffers.springdatajpa.menu.model.entity.Menu;
 import com.ohgiraffers.springdatajpa.menu.model.repository.MenuRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -49,8 +54,39 @@ public class MenuService {
         return menuList.stream()
                 .map(menu -> modelMapper.map(menu, MenuDto.class))
                 .collect(Collectors.toList());
+    }
 
+    public Page<MenuDto> findAllMenus(Pageable pageable) {
 
+        // page 파라미터가 Pageble의 number로 넘어옴
+        // 조회했을때는 인덱스 기준이 되기 때문에 -1
+        pageable = PageRequest.of(pageable.getPageNumber()<= 0 ? 0: pageable.getPageNumber() -1,
+                pageable.getPageSize(), Sort.by("menuCode").descending());
+
+        Page<Menu> menuList = menuRepository.findAll(pageable);
+
+        return menuList.map(menu -> modelMapper.map(menu, MenuDto.class));
 
     }
+
+    public List<MenuDto> findByMenuPrice(Integer menuPrice) {
+
+        List<Menu> menuList = null;
+
+        if(menuPrice == 0) {
+            menuList = menuRepository.findAll();
+        }else if (menuPrice >0){
+            menuList = menuRepository.findByMenuPriceGreaterThan(menuPrice,
+                    Sort.by("menuPrice").descending());
+        }
+
+        return menuList.stream()
+                .map(menu -> modelMapper.map(menu, MenuDto.class))
+                .collect(Collectors.toList());
+    }
+
+//    public List<CategoryDto> findAllCategory() {
+//
+//        List<Category> categoryList = categoryRepository.findAllcategory();
+//    }
 }
