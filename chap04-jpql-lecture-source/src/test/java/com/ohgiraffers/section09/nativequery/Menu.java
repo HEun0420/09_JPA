@@ -22,7 +22,7 @@ import lombok.*;
                         menu_code = ?
                         """,
                 resultClass = Menu.class
-        )
+        ) 
 })
 public class Menu {
 
