@@ -4,23 +4,24 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tbl_menu")
+@Table(name="tbl_menu")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @ToString
+@Setter
+//@Builder(toBuilder = true)
 public class Menu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "menu_code")
+    @Column(name="menu_code")
     private int menuCode;
 
-    @Column(name = "menu_Name")
+    @Column(name = "menu_name")
     private String menuName;
 
-    @Column(name = "menu_Price")
+    @Column(name = "menu_price")
     private int menuPrice;
 
     @Column(name = "category_code")
@@ -28,6 +29,4 @@ public class Menu {
 
     @Column(name = "orderable_status")
     private String orderableStatus;
-
-
 }

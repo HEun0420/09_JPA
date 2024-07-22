@@ -1,8 +1,6 @@
-package com.ohgiraffers.springdatajpa.menu.dto;
+package com.ohgiraffers.springdatajpa.menu.model.dto;
 
-import jakarta.persistence.*;
 import lombok.*;
-
 
 @NoArgsConstructor
 @AllArgsConstructor

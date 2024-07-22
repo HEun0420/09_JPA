@@ -8,14 +8,20 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-// EntityManagerFactory, EntityManager, EntityTransaction -> 자동 구현
-// JpaRepository <엔티티명, pk타입>
+// EntityMangerFactory, EntityManager, EntityTransaction -> 자동 구현
+// JpaRepository<엔티티명, PK타입>
 public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
-        List<Menu> findByMenuPriceGreaterThan(Integer menuPrice, Sort menuPrice1);
-        List<Menu> findByMenuPriceGreaterThanOrderByMenuPriceDesc(Integer menuPrice);
+    // 쿼리 메소드
+    List<Menu> findByMenuPriceGreaterThan(Integer menuPrice, Sort menuPrice1);
+    List<Menu> findByMenuPriceGreaterThanOrderByMenuPriceDesc(Integer menuPrice);
 
-    // menuPrice랑 같은 금액의 메뉴목록 조회
+    // 금액이 같은 메뉴들
     List<Menu> findByMenuPriceEquals(Integer menuPrice);
 
+    // 금액이 크거나 같은 메뉴들
+    List<Menu> findByMenuPriceGreaterThanEqual(Integer menuPrice);
+
+
+    // menuPrice랑 같은 금액의 메뉴목록 조회
 }
